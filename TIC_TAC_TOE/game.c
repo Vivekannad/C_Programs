@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <conio.h>
 
 void showBoard(char[]);
 int checkForWin(char[]);
@@ -14,6 +13,7 @@ void main()
     {
         showBoard(arr);
         player = (player % 2) ? 1 : 2;
+        // if (player % 2 == 1) player = 1 else player = 2;
         printf("Player %d turn  " , player);
         mark = (player == 1) ? 'X' : 'O';
         scanf("%d", &choice);
@@ -58,8 +58,7 @@ void main()
         {
             printf("Invalid input ");
             player--;
-            while(getchar() != '\n');
-            // getch();
+            while(getchar() != '\n');   //Buffer clearing.
         }
         i = checkForWin(arr);
         if(i == -1) player++;
