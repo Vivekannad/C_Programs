@@ -2,14 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define FILENAME_SIZE 256
+#define CONTENT_SIZE 1024
+
 void clearBuffer();
+void clearScreen();
 void menu();
 void createFile();
 void readFile();
 void writeToFile();
 void renameFile();
 void removeFile();
-// char* getFileNameAndExt();
 
 int main(){
     int choice = 0;
@@ -59,16 +62,25 @@ void clearBuffer(){
     while(getchar() != '\n');
 }
 
+void clearScreen() {
+    #ifdef _WIN32
+        system("cls");  // For Windows
+    #else
+        system("clear");  // For Linux/MacOS
+    #endif
+}
+
+
 const char* getFileNameAndExt(const char* prompt){
-    static char fileName[100];  //static enables the variable to be stored for the lifetime of code. // not in function's lifetime but the code.
+    static char fileName[FILENAME_SIZE];  //static enables the variable to be stored for the lifetime of code. // not in function's lifetime but the code.
     char extension[10];
     printf("%s", prompt);
-    fgets(fileName, sizeof(fileName), stdin);
-    fileName[strcspn(fileName , "\n")] = '\0';
+    scanf("%s", fileName);  // as there is no space in file names. 
+    clearBuffer();
     do{
         printf("Enter the file extension (e.g., .txt): ");
-        fgets(extension, sizeof(extension), stdin);
-        extension[strcspn(extension , "\n")] = '\0';
+        scanf("%s", extension);     //as there is no space in extension
+        clearBuffer();
         if(extension[0] != '.'){
             printf("Invalid extension input. Please start with a dot (.).\n");
         }
@@ -78,41 +90,44 @@ const char* getFileNameAndExt(const char* prompt){
 }
 
 const char* getContent(){
-    static char content[100];
+    static char content[CONTENT_SIZE];
     printf("Enter the content: ");
-    fgets(content, sizeof(content), stdin);
-    content[strcspn(content , "\n")] = '\0';
+    if (fgets(content, sizeof(content), stdin) == NULL) {
+        printf("Error reading content.\n");
+        content[0] = '\0';  // Ensure content is empty on error
+    }
     return content;
 }
 
 void createFile(){
-    char fileName[100];
-    char content[100];
+    char fileName[FILENAME_SIZE];
+    char content[CONTENT_SIZE];
     FILE *fp;
     strcpy(fileName, getFileNameAndExt("Enter the file name: "));
     fp = fopen(fileName, "w");
     if(fp == NULL){
-        printf("Error opening the file.\n");
+        perror("Error opening the file.\n");    // prints the error
         return;
     }
     strcpy(content, getContent());
     fprintf(fp, "%s", content);
     fclose(fp);
-    system("cls");
+    clearScreen();
     printf("File '%s' created successfully.\n", fileName);
 }
 
 void readFile(){
-    char fileName[100];
-    char content[100];
+    char fileName[FILENAME_SIZE];
+    char content[CONTENT_SIZE];
     FILE *fp;
     strcpy(fileName, getFileNameAndExt("Enter the file name: "));
     fp = fopen(fileName, "r");
     if(fp == NULL){
-        printf("Error opening the file.\n");
+        clearScreen();
+        perror("Error opening the file.\n");
         return;
     }
-    system("cls");
+    clearScreen();
     printf("Content of '%s':\n", fileName);
     while(fgets(content, sizeof(content), fp)){
         printf("%s", content);
@@ -121,44 +136,45 @@ void readFile(){
 }
 
 void writeToFile(){
-    char fileName[100];
-    char content[100];
+    char fileName[FILENAME_SIZE];
+    char content[CONTENT_SIZE];
     FILE *fp;
     strcpy(fileName, getFileNameAndExt("Enter the file name: "));
     fp = fopen(fileName, "a");
     if(fp == NULL){
-        printf("Error opening the file.\n");
+        clearScreen();
+        perror("Error opening the file.\n");
         return;
     }
     strcpy(content, getContent());
     fprintf(fp, "%s", content);
     fclose(fp);
-    system("cls");
+    clearScreen();
     printf("Content added to '%s' successfully.\n", fileName);
 }
 
 void renameFile(){
-    char oldFileName[100];
-    char newFileName[100];
+    char oldFileName[FILENAME_SIZE];
+    char newFileName[FILENAME_SIZE];
     strcpy(oldFileName, getFileNameAndExt("Enter your old file name: "));
     strcpy(newFileName, getFileNameAndExt("Enter your new file name: "));
     if (rename(oldFileName, newFileName) == 0) {
-        system("cls");
+        clearScreen();
         printf("File renamed from '%s' to '%s' successfully.\n", oldFileName, newFileName);
     } else {
-        system("cls");
-        printf("Error renaming the file.\n");
+        clearScreen();
+        perror("Error renaming the file.\n");
     }
 }
 
 void removeFile(){
-    char fileName[100];
+    char fileName[FILENAME_SIZE];
     strcpy(fileName, getFileNameAndExt("Enter the file name: "));
     if(remove(fileName) == 0){
-        system("cls");
+        clearScreen();
         printf("File '%s' deleted successfully.\n", fileName);
     }else{
-        system("cls");
-        printf("Error deleting the file.\n");
+        clearScreen();
+        perror("Error deleting the file.\n");
     }
 }
