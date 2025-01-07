@@ -24,11 +24,11 @@ void addBus(int *);
 void displayBus(int);
 void reserveSeats(int);
 void cancelReservation(int);
-void loadData(int *);
+void loadData();
 
 int main() {
     int choice = 0, busCount = 0;
-    loadData(&busCount);
+    loadData();
     while (choice != 5) {
         menu();
         choice = userChoice();
@@ -59,16 +59,17 @@ void clearBuffer() {
     while (getchar() != '\n');
 }
 
-void loadData(int *busCount) {
+void loadData() {
     FILE *fptr = fopen("records.txt", "r");
     if (fptr == NULL) {
         printf("Error opening file!\n");
         return;
     }
+    int busCount = 0;
     while (fscanf(fptr, "ID: %d, Name: %99[^,], Available Seats: %d, Reserved Seats: %d\n", 
-                  &busses[*busCount].id, busses[*busCount].name, 
-                  &busses[*busCount].availableSeats, &busses[*busCount].reservedSeats) == 4) {
-        (*busCount)++;
+                  &busses[busCount].id, busses[busCount].name, 
+                  &busses[busCount].availableSeats, &busses[busCount].reservedSeats) == 4) {
+        busCount++;
     }
     fclose(fptr);
 }
