@@ -75,6 +75,7 @@ void inputSalesData(Product product[], int count, int n)
         calculateSalesValue(&product[place], place);
         fprintf(fp, " %.2f \n", product[place].salesValue);
     }
+    fclose(fp);
 
 }
 
