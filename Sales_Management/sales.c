@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #define MAX_STOCK 50
+#define RECORDS_FILE "records.txt"
 
 typedef struct Product
 {
@@ -15,22 +17,22 @@ typedef struct Product
 // Stock cannot be greater than 50.
 
 void clearBuffer();
-void inputSalesData(Product *, int);
+void inputSalesData(Product[] , int, int);
 void calculateSalesValue(Product*, int);
-// void adjustStock(Product*,int);
-void displayProducts(Product*,int);
+void recursiveAdjustStock(Product *, int);
+void displayProducts(Product[],int);
+void loadSalesData(Product [], int *);
 
 int main()
 {
-    int n;
+    int n = 0, count = 0;
+    Product products[n];
+    loadSalesData(products , &count);
     printf("Enter the number of products ");
     scanf("%d", &n);
     clearBuffer();
-    Product products[n];
-    inputSalesData(&products[n], n);
-    calculateSalesValue(&products[n],n);
-    // adjustStock(&products[n]);
-    displayProducts(&products[n],n);
+    inputSalesData(products, n, count);
+    displayProducts(products, n+count);
     return 0;
 }
 
@@ -39,45 +41,68 @@ void clearBuffer()
     while (getchar() != '\n');
 }
 
-void inputSalesData(Product *product, int count)
+void inputSalesData(Product product[], int count, int n)
 {
     int i;
+        FILE *fp = fopen(RECORDS_FILE , "a");
+    if(fp == NULL){
+        perror("Eror opening the file");
+        return;
+    }
     for (i = 0; i < count; i++)
     {
+        int place = i + n;
         printf("Enter the name of the product ");
-        fgets(product->name, sizeof(product->name), stdin); // also adds \n if length less than given size
-        product->name[strcspn(product->name, "\n")] = '\0'; // removes extra \n
+        fgets(product[place].name, sizeof(product[place].name), stdin); // also adds \n if length less than given size
+        product[place].name[strcspn(product[place].name, "\n")] = '\0'; // removes extra \n
+        fprintf(fp, " %s,", product[place].name );
         printf("Enter the code of the product ");
-        scanf("%d", &product->code);
+        scanf("%d", &product[place].code);
+        fprintf(fp , " %d,", product[place].code);
         clearBuffer();
         printf("Enter the price of the product ");
-        scanf("%f", &product->price);
+        scanf("%f", &product[place].price);
+        fprintf(fp, " %.2f,", product[place].price);
         clearBuffer();
-        printf("Enter the quantity in stock for this product ");
-        scanf("%d", &product->stockQuantity);
+        printf("Enter the quantity in stock for this product (0-50) ");
+        scanf("%d", &product[place].stockQuantity);
         clearBuffer();
+        if (product[place].stockQuantity > MAX_STOCK) {
+            recursiveAdjustStock(&product[place], product[place].stockQuantity - MAX_STOCK);
+            printf("Stock adjusted !!\n");
+        }
+        fprintf(fp, " %d,", product[place].stockQuantity);
+        calculateSalesValue(&product[place], place);
+        fprintf(fp, " %.2f \n", product[place].salesValue);
+    }
+
+}
+
+void calculateSalesValue(Product *product, int n){
+    (*product).salesValue = (*product).price * (*product).stockQuantity;
+}
+
+void recursiveAdjustStock(Product *product, int limit) {
+    if (limit > 0) {
+        product->stockQuantity--;
+        recursiveAdjustStock(product, --limit);
     }
 }
 
-void calculateSalesValue(Product * product, int n){
+
+void displayProducts(Product product[], int n){
     int i;
+    printf("\nName\t\tcode\tprice\tstock\tsalesValue");
     for(i = 0; i < n; i++){
-        (product)[i].salesValue = product[i].price * product[i].stockQuantity;
+        printf("\n%s\t\t%d\t%.1f\t%d\t%.2f", product[i].name, product[i].code , product[i].price, product[i].stockQuantity, product[i].salesValue);
     }
 }
-// void adjustStock(Product * product, int n){
-//     int i;
-//     for(i = 0; i < n; i++){
-//         if(product->stockQuantity > MAX_STOCK ){
-//             adjustStock(&product, n);
 
-//         }
-//     }
-// }
-
-void displayProducts(Product * product, int n){
-    int i;
-    for(i = 0; i < n; i++){
-        printf("The sales value  is %f ", product[i].salesValue);
+void loadSalesData(Product product[], int *count){
+    FILE *file = fopen(RECORDS_FILE, "r");
+    while(fscanf(file, " %99[^,], %d, %f, %d, %f", product[*count].name, &product[*count].code, &product[*count].price, &product[*count].stockQuantity, &product[*count].salesValue) == 5){
+        printf("Data loaded successfully\n");
+        (*count)++;
     }
+    fclose(file);
 }
