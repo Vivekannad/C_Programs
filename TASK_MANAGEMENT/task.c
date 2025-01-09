@@ -16,20 +16,23 @@ typedef struct Task
 
 Task tasks[MAX_TASKS];
 
+// Function declarations
 void clearBuffer();
 void menu();
 void loadTasks(int *);
 void userChoice(int *);
 void inputTaskDetails(int *);
+void updateTaskStatusValidation(int);
 void updateTaskStatus(Task *);
 void displayTaskDetails(int);
 void centerText(const char *, int);
-void updateTaskStatusValidation(int);
+void centerNumber(int, int);
 
 int main()
 {
     int choice, taskCount = 0;
     loadTasks(&taskCount);
+    printf("\n----------------------------TASK MANAGER-----------------------");
     while (choice != 4)
     {
         menu();              // prints the menu to user
