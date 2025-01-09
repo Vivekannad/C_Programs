@@ -29,6 +29,7 @@ void updateTaskStatusValidation(int);
 int main()
 {
     int choice, taskCount = 0;
+    loadTasks(&taskCount);
     while (choice != 4)
     {
         menu();              // prints the menu to user
@@ -59,16 +60,22 @@ void clearBuffer()
     while (getchar() != '\n'); // clears the buffer
 }
 
-void loadTasks(int * taskCount){
-    FILE *file = fopen(RECORDS_FILE , "r");
+void loadTasks(int *taskCount)
+{
+    FILE *file = fopen(RECORDS_FILE, "r");
+    if (file == NULL)
+    {
+        printf("Error opening file for reading.\n");
+        return;
+    }
 
-    while(fscanf(file , "%s ,%s, %d , %d", tasks[*taskCount].title , tasks[*taskCount].description , tasks[*taskCount].priority , tasks[*taskCount].status) != 4){
+    while (fscanf(file, "Title:-%[^,], Description:- %[^,], Priority:- %d, Status:- %d\n", tasks[*taskCount].title, tasks[*taskCount].description, &tasks[*taskCount].priority, &tasks[*taskCount].status) == 4)
+    {
         (*taskCount)++;
     }
 
     fclose(file);
 }
-
 
 void menu()
 {
@@ -104,17 +111,17 @@ void inputTaskDetails(int *taskCount)
     }
     printf("Enter the title of the task:-  ");
     scanf("%[^\n]", &tasks[*taskCount].title); // using bitwise operators to get string as input
-    fprintf(fptr , " %s,", tasks[*taskCount].title);
+    fprintf(fptr , "Title:-  %s,", tasks[*taskCount].title);
     clearBuffer();
     printf("Enter the task description:-  ");
     scanf("%[^\n]", &tasks[*taskCount].description);
-       fprintf(fptr , " %s,", tasks[*taskCount].description);
+       fprintf(fptr , " Description:- %s,", tasks[*taskCount].description);
     clearBuffer();
     printf("Enter the priority:-  ");
     scanf("%d", &tasks[*taskCount].priority);
-       fprintf(fptr , " %d,", tasks[*taskCount].priority);
+       fprintf(fptr , " Priority:- %d,", tasks[*taskCount].priority);
     tasks[*taskCount].status = false;
-       fprintf(fptr , " %d\n", tasks[*taskCount].status);
+       fprintf(fptr , " Status:- %d\n", tasks[*taskCount].status);
     printf("Status has been set to pending \n");
     clearBuffer(); // clearing newline character
     (*taskCount)++;
@@ -155,7 +162,7 @@ void updateTaskStatus(Task *task)
     {
         if (strlen(tasks[i].title) > 0) // Check if the task is valid
         {
-            fprintf(file, "%s,%s,%d,%d\n", tasks[i].title, tasks[i].description, tasks[i].priority, tasks[i].status);
+            fprintf(file, "Title:-%s, Description:- %s, Priority:-  %d, Status:-  %d\n", tasks[i].title, tasks[i].description, tasks[i].priority, tasks[i].status);
         }
     }
 
