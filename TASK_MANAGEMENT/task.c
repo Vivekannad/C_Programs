@@ -32,7 +32,7 @@ int main()
 {
     int choice, taskCount = 0;
     loadTasks(&taskCount);
-    printf("\n----------------------------TASK MANAGER-----------------------");
+    printf("\n----------------------------TASK MANAGER-----------------------\n");
     while (choice != 4)
     {
         menu();              // prints the menu to user
