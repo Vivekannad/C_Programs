@@ -82,6 +82,22 @@ This is a simple console-based application for managing conference participants.
    John Doe                      101       ABC Corp             1200      Paid                
    ```
 
+## Function Descriptions
+
+- **clearBuffer:** Clears the input buffer to avoid any unwanted characters.
+- **loadParticipants:** Loads participant data from the `records.txt` file into the `participant` array.
+- **menu:** Displays the main menu options.
+- **userChoice:** Prompts the user to enter a choice from the menu and validates the input.
+- **updatePaymentStatus:** Updates the payment status of a given participant.
+- **isParticipantThere:** Checks if a participant with a given ID exists in the `participant` array.
+- **userChoiceUpdatePaymentStatus:** Prompts the user to enter a participant ID and updates the payment status if the participant exists.
+- **recursivelyAdjustFee:** Recursively adjusts the registration fee to ensure it is within the range of 1000 to 10000.
+- **enterRegistrationFee:** Prompts the user to enter a registration fee and adjusts it if necessary.
+- **inputParticipantData:** Prompts the user to enter participant details and saves them to the `records.txt` file.
+- **centerNumber:** Centers a number within a given width for display purposes.
+- **centerText:** Centers a text string within a given width for display purposes.
+- **displayParticipants:** Displays the list of all participants with their details.
+
 ## Notes
 
 - The participant details are stored in a file named `records.txt`.
