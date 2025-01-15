@@ -49,7 +49,7 @@ int main()
             int user_index = userLogin();
             if (user_index >= 0)
             {
-                printf("Welcome back! %s ", user[user_index].username); 
+                printf("\nWelcome back! %s ", user[user_index].username); 
             }
             else
             {
