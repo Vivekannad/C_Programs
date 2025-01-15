@@ -26,7 +26,7 @@ void userChoice(int *);     //getting user choice
 bool isUserAlreadyRegistered(char *);
 void registerUser();        //registering new user
 int userLogin();            // logging in of user
-void fix_fgets_input(char *);       // removing extra line By fgets
+void modifyFgetsInput(char *);       // removing extra line By fgets
 bool inputCredentials(char *, char *);    // getting email and password with validation
 void maskPassword(char *);       //masking the password
 const char* getRegistrationTime();         //getting registration time of users
@@ -171,7 +171,7 @@ int userLogin()
     return -1;
 }
 
-void fix_fgets_input(char *string)
+void modifyFgetsInput(char *string)
 {
     int index = strcspn(string, "\n");
     string[index] = '\0';
@@ -181,7 +181,7 @@ bool inputCredentials(char *username, char *password){
     int wantMasked = 0, isValid;
     printf("Enter the name ");
     fgets(username, CREDENTIALS, stdin);
-    fix_fgets_input(username);
+    modifyFgetsInput(username);
     printf("Enter the password ");
     do{
         printf("\nDo you want it hidden or not? 1-hide 0-shown ");
@@ -197,7 +197,7 @@ bool inputCredentials(char *username, char *password){
     }else{
         printf("Password:- ");
         fgets(password, CREDENTIALS, stdin);
-        fix_fgets_input(password);
+        modifyFgetsInput(password);
     }
     if(!isUserAlreadyRegistered(username)){
         return 0;
@@ -249,7 +249,7 @@ int forgetPassword(){
     char findUser[CREDENTIALS];
     printf("Enter the username :- ");
     fgets(findUser , sizeof(findUser), stdin);
-    fix_fgets_input(findUser);
+    modifyFgetsInput(findUser);
     for(int i = 0; i < userCount; i++){
         if(strcmp(findUser , user[i].username) == 0){
             return i;
