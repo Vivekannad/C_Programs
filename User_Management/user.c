@@ -3,6 +3,7 @@
 #include <string.h>
 #include <conio.h>
 #include <ctype.h>
+#include <time.h>
 
 #define MAX_USERS 10
 #define CREDENTIALS 30
@@ -25,40 +26,46 @@ int userLogin();
 void fix_fgets_input(char *);
 void inputCredentials(char *, char *);
 void maskPassword(char *);
+void getLogInTime();
 
 int main()
 {
     int choice;
-    while (1)
-    {
-        menu();
-        userChoice(&choice);
-        switch (choice)
-        {
-        case 1:
-            registerUser(&choice);
-            break;
-        case 2:
-            int user_index = userLogin();
-            if (user_index >= 0)
-            {
-                printf("Welcome back! %s ", user[user_index].username[0]);
-            }
-            else
-            {
-                printf("\nLogin Failed! Incorrect username or password. \n");
-            }
-            break;
-        case 3:
-            printf("\nExiting program");
-            exit(0);
-            break;
-        default:
-            printf("Enter between the choices ");
-        }
-    }
-    return 0;
+    // while (1)
+    // {
+    //     menu();
+    //     userChoice(&choice);
+    //     switch (choice)
+    //     {
+    //     case 1:
+    //         registerUser(&choice);
+    //         break;
+    //     case 2:
+    //         int user_index = userLogin();
+    //         if (user_index >= 0)
+    //         {
+    //             printf("Welcome back! %s ", user[user_index].username); 
+    //         }
+    //         else
+    //         {
+    //             printf("\nLogin Failed! Incorrect username or password. \n");
+    //         }
+    //         break;
+    //     case 3:
+    //         printf("\nExiting program");
+    //         exit(0);
+    //         break;
+    //     default:
+    //         printf("Enter between the choices ");
+    //     }
+    // }
+
+        getLogInTime();
+
+        return 0;
 }
+
+
 
 void clearBuffer(){
     while(getchar() != '\n');
@@ -69,9 +76,39 @@ void menu()
     printf("\n\nUser Management System");
     printf("\n1. Register");
     printf("\n2. Login");
-    printf("\n3. See All Users");
-    printf("\n4. Exit");
+    printf("\n3. Exit");
 }
+
+void getLogInTime(){
+    char timeString[30];
+    //time_t: A type used to store the time in seconds since the Unix epoch (January 1, 1970)
+    time_t currentTime;            // Variable to store time in seconds since epoch
+    // A structure that holds detailed components of time (e.g., hours, minutes, seconds, year, month, day).
+    struct tm *localTime;          // Structure to hold local time information
+
+    // Get the current time in seconds
+    currentTime = time(NULL);   // seconds passed since 1st Jan 1970.
+    if (currentTime == -1) {
+        printf("Error getting the current time.\n");
+        return ;
+    }
+
+    // Convert to local time
+    localTime = localtime(&currentTime);
+    if (localTime == NULL) {
+        printf("Error converting to local time.\n");
+        return ;
+    }
+
+
+    // Display the time in a readable format
+    sprintf(timeString , "%02d:%02d:%02d" , localTime->tm_hour,
+           localTime->tm_min,
+           localTime->tm_sec );
+        printf("The time is %s", timeString);
+}
+
+
 void userChoice(int *choice)
 {
     printf("\nEnter your choice ");
@@ -99,7 +136,6 @@ int userLogin()
     char username[CREDENTIALS];
     char password[CREDENTIALS];
     inputCredentials(username, password);
-
     for (i = 0; i < userCount; i++)
     {
         if (strcmp(username, user[i].username) == 0 && strcmp(password, user[i].password) == 0)
@@ -117,27 +153,31 @@ void fix_fgets_input(char *string)
     string[index] = '\0';
 }
 
-void inputCredentials(char *username, char *password)
-{
-    int wantMasked;
+void inputCredentials(char *username, char *password){
+    int wantMasked = 0, isValid;
     printf("Enter the name ");
     fgets(username, CREDENTIALS, stdin);
     fix_fgets_input(username);
     printf("Enter the password ");
-    printf("\nDo you want it hidden or not? 1-hide 0-shown ");
-    scanf("%d", &wantMasked);
-    clearBuffer();
+    do{
+        printf("\nDo you want it hidden or not? 1-hide 0-shown ");
+        isValid = scanf("%d", &wantMasked);
+        clearBuffer();  //clears the buffer to remove unnecessary characters
+        if(isValid != 1 || (wantMasked != 1 && wantMasked != 0)){
+            printf("Invalid Input! ");
+        }
+    }while(isValid != 1 || (wantMasked != 1 && wantMasked != 0));
+    
     if(wantMasked){
-    maskPassword(password);
+        maskPassword(password);
     }else{
-    printf("Password:- ");
-    fgets(password , CREDENTIALS , stdin);
-    fix_fgets_input(password);
+        printf("Password:- ");
+        fgets(password, CREDENTIALS, stdin);
+        fix_fgets_input(password);
     }
 }
 
-void maskPassword(char *password)
-{
+void maskPassword(char *password){
     printf("Password:- ");
     int i = 0;
     char ch;
