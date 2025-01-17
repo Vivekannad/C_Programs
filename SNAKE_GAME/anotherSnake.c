@@ -24,6 +24,11 @@ for(i = 0 ; i <= HEIGHT ; i++){
         if(i == 0 || i == HEIGHT || j == 0 || j == WIDTH ){
             printf("*");
         } else {
+            if(i == x && j == y) {
+                printf("0");
+            } else if (i == fruitX && j == fruitY){
+                printf("@");
+            }else
             printf(" ");
         }
     }
