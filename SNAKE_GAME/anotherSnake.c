@@ -6,7 +6,7 @@
 #define HEIGHT 20
 #define WIDTH 30
 
-int x,y,fruitX, fruitY , flag , gameEnd , score;
+int x,y,fruitX, fruitY , flag , gameEnd , score = 0;
 
 void draw();
 void setUp();
@@ -15,8 +15,8 @@ void makeLogic();
 
 int main () { 
 
-    setUp();
     // getchar();
+    setUp();
     while(gameEnd != 1) {
     input();
     if (flag != 0) { // Only draw and make logic if a key is pressed
@@ -31,7 +31,7 @@ int main () {
 
 void draw () {
     system("cls");
-int i, j;
+int i, j , k;
 for(i = 0 ; i <= HEIGHT ; i++){
     for(j  = 0; j <= WIDTH ; j++){
 
@@ -40,6 +40,9 @@ for(i = 0 ; i <= HEIGHT ; i++){
         } else {
             if(i == x && j == y) {
                 printf("0");
+                for( k = 0; k < score ; k++){
+                    printf("0");
+                }
             } else if (i == fruitX && j == fruitY){
                 printf("&");
             }else
@@ -51,8 +54,13 @@ for(i = 0 ; i <= HEIGHT ; i++){
 }
 
 void setUp(){
+    srand(time(NULL));
+    if(score == 0){
     x = HEIGHT / 2;
     y = WIDTH / 2;
+
+    }
+
 
     label1:
     fruitX = rand() % 20;
@@ -105,5 +113,14 @@ void makeLogic () {
             x++;
             break;
 
+    }
+
+    if (x < 0 || x == HEIGHT || y < 0 || y == WIDTH) {
+        printf("Game Ended \n");
+        gameEnd = 1;
+    }
+        if(x == fruitX && y == fruitY) {
+        score+=1;
+        setUp();
     }
 }
