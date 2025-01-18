@@ -1,22 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <conio.h>
 
 #define HEIGHT 20
 #define WIDTH 30
 
-int x,y,fruitX, fruitY;
+int x,y,fruitX, fruitY , flag , gameEnd , score;
 
 void draw();
 void setUp();
+void input();
+void makeLogic();
 
-int main() {
+int main () { 
+
     setUp();
-    draw();
+    // getchar();
+    while(gameEnd != 1) {
+    input();
+    if (flag != 0) { // Only draw and make logic if a key is pressed
+        draw();
+        makeLogic();
+        flag = 0;
+    }
+    }
     return 0;
+
 }
 
 void draw () {
+    system("cls");
 int i, j;
 for(i = 0 ; i <= HEIGHT ; i++){
     for(j  = 0; j <= WIDTH ; j++){
@@ -27,7 +41,7 @@ for(i = 0 ; i <= HEIGHT ; i++){
             if(i == x && j == y) {
                 printf("0");
             } else if (i == fruitX && j == fruitY){
-                printf("@");
+                printf("&");
             }else
             printf(" ");
         }
@@ -50,5 +64,46 @@ void setUp(){
     fruitY = rand() % 20;
     if(fruitY == 0)
     goto label2;
+    gameEnd = 0;
+    score = 0;
 
+}
+
+void input () {
+    if(kbhit()) { // Call kbhit as a function
+        switch(getch()) {
+            case 'a' :
+                flag = 1;
+                break;
+            case 's' :
+                flag = 2;
+                break;
+            case 'd' :
+                flag = 3;
+                break;
+            case 'f' :
+                flag = 4;
+                break;
+            default:
+                flag = 0;
+        }
+    }
+}
+
+void makeLogic () {
+    switch(flag) {
+        case 1:
+            y--;
+            break;
+        case 2:
+            y++;
+            break;
+        case 3:
+            x--;
+            break;
+        case 4:
+            x++;
+            break;
+
+    }
 }
