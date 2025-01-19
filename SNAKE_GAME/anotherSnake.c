@@ -2,178 +2,189 @@
 #include <stdlib.h>
 #include <time.h>
 #include <conio.h>
-#include <windows.h> 
+#include <windows.h>
 
-#define Up 72
 #define HEIGHT 20
 #define WIDTH 30
+#define MAX_TAIL 100
 
-int x,y,fruitX, fruitY , flag , gameEnd , score = 0;
-int tailX[100] , tailY[100];
-int piece;
+// Movement directions
+#define UP 1
+#define DOWN 2
+#define RIGHT 3
+#define LEFT 4
 
+// Global variables
+int x, y, fruitX, fruitY, flag, gameEnd, score = 0;
+int tailX[MAX_TAIL], tailY[MAX_TAIL], tailLength;
+
+// Function declarations
 void draw();
 void setUp();
 void input();
 void makeLogic();
 void gotoxy(int x, int y);
-void hideCursor();
 void clearScreen();
+void instructions();
+void hideCursor();
 
-int main () { 
+int main() {
     clearScreen();
-    hideCursor();
+    instructions();
+    getch();
+    clearScreen();
     setUp();
-    while(gameEnd != 1) {
+    hideCursor();
+    while (!gameEnd) {
         input();
-        // gotoxy(0,0);
         makeLogic();
         draw();
-        printf("The score is %d", score);
-        Sleep(100); // Add a small delay to control the speed of the game
+        printf("The score is %d\n", score);
+        Sleep(500 - score); // Dynamic speed increase
     }
-        
-        printf("\nGame Ended  \n");
-        Sleep(1000);
-    return 0;
 
+    printf("\nGame Ended!!\n");
+    Sleep(1000);
+    return 0;
 }
 
-
-void clearScreen(){
+// Clears the console screen
+void clearScreen() {
     #ifdef _WIN32
-        system("cls");  // for windows
-    #else 
-        system("clear");    // for linux/mac
+        system("cls");  // Windows
+    #else
+        system("clear"); // Linux/macOS
     #endif
 }
 
-void draw () {
-    gotoxy(0,0);
-int i, j , k , ch;
-for(i = 0 ; i <= HEIGHT ; i++){
-    for(j  = 0; j <= WIDTH ; j++){
+//instructions of the game
+void instructions() {
+    printf("\nWELCOME TO THE SNAKE GAME\n");
+    printf("Press w for upward direction\n");
+    printf("Press s for downward direction\n");
+    printf("Press a for left direction\n");
+    printf("Press d for right direction\n");
+    printf("The game would be over if snake hits the boundary or hits its own tail\n");
+    printf("Press any key to continue");
+}
 
-        if(i == 0 || i == HEIGHT || j == 0 || j == WIDTH ){
-            printf("*");
-        } else {
-            if(i == x && j == y) {
-                printf("0");
-            } else if (i == fruitX && j == fruitY){
-                printf("&");
-            }else{
-                ch = 0;
-                for(k = 0; k < piece; k++){
-                    if(i == tailX[k] && j == tailY[k]){
-                        printf("o");
-                        ch = 1;
-                    }
-                }
-                if(ch == 0) printf(" ");
-            }
+// Moves the cursor to a specific position
+void gotoxy(int x, int y) {
+    COORD coord = {x, y};
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+// Initializes game variables
+void setUp() {
+    srand(time(NULL));
+    y = HEIGHT / 2;  // y represents vertical axis
+    x = WIDTH / 2;   // x represents horizontal axis
+
+    fruitY = (rand() % (HEIGHT - 2)) + 1;
+    fruitX = (rand() % (WIDTH - 2)) + 1;
+
+    gameEnd = 0;
+    tailLength = 0;
+    score = 0;
+    flag = RIGHT;
+}
+
+// Handles user input for movement
+void input() {
+    if (kbhit()) { // If a key is pressed
+        switch (getch()) {
+            case 'w': flag = UP; break;
+            case 's': flag = DOWN; break;
+            case 'd': flag = RIGHT; break;
+            case 'a': flag = LEFT; break;
         }
     }
+}
+
+// Updates game logic
+void makeLogic() {
+    // Update tail position
+    for (int i = tailLength - 1; i > 0; i--) {
+        tailX[i] = tailX[i - 1];
+        tailY[i] = tailY[i - 1];
+    }
+    if (tailLength > 0) {
+        tailX[0] = x;
+        tailY[0] = y;
+    }
+
+    // Move snake
+    switch (flag) {
+        case UP:    y--; break;
+        case DOWN:  y++; break;
+        case RIGHT: x++; break;
+        case LEFT:  x--; break;
+    }
+
+    // Check boundary collision
+    if (y <= 0 || y >= HEIGHT || x <= 0 || x >= WIDTH) {
+        gameEnd = 1;
+        return;
+    }
+
+    // Check self-collision
+    for (int i = 0; i < tailLength; i++) {
+        if (tailX[i] == x && tailY[i] == y) {
+            gameEnd = 1;
+            return;
+        }
+    }
+
+    // Check if snake eats the fruit
+    if (x == fruitX && y == fruitY) {
+        score += 10;
+        tailLength++;
+
+        // Generate new fruit location
+        int fruitOnTail;
+        do {
+            fruitOnTail = 0;
+            fruitX = (rand() % (WIDTH - 2)) + 1;
+            fruitY = (rand() % (HEIGHT - 2)) + 1;
+
+            for (int i = 0; i < tailLength; i++) {
+                if (fruitX == tailX[i] && fruitY == tailY[i]) {
+                    fruitOnTail = 1;
+                    break;
+                }
+            }
+        } while (fruitOnTail || (fruitX == x && fruitY == y));
+    }
+}
+
+// Renders the game board
+void draw() {
+    gotoxy(0, 0);
+    
+    for (int i = 0; i <= HEIGHT; i++) {
+        for (int j = 0; j <= WIDTH; j++) {
+            if (i == 0 || i == HEIGHT || j == 0 || j == WIDTH) {
+                printf("*"); // Walls
+            } else if (i == y && j == x) {
+                printf("O"); // Snake head
+            } else if (i == fruitY && j == fruitX) {
+                printf("&"); // Fruit
+            } else {
+                int tailFound = 0;
+                for (int k = 0; k < tailLength; k++) {
+                    if (i == tailY[k] && j == tailX[k]) {
+                        printf("o"); // Snake tail
+                        tailFound = 1;
+                        break;
+                    }
+                }
+                if (!tailFound) printf(" ");
+            }
+        }
         printf("\n");
     }
 }
 
-void setUp(){
-    srand(time(NULL));
-    x = HEIGHT / 2;
-    y = WIDTH / 2;
-
-    fruitX = (rand() % (HEIGHT - 2))+1;
-
-    fruitY = (rand() % (WIDTH - 2))+1;
-
-    gameEnd = 0;
-    piece = 0;
-    score = 0;
-    flag = 2;
-}
-
-void input () {
-    if(kbhit()) { // if key is pressed
-        switch(getch()) {
-            case 'w' :
-                flag = 1;
-                break;
-            case 's' :
-                flag = 2;
-                break;
-            case 'd' :
-                flag = 3;
-                break;
-            case 'a' :
-                flag = 4;
-                break;
-         
-        }
-    }
-}
-
-void makeLogic () {
-    int prevX = tailX[0];
-    int prevY = tailY[0];
-    int prev2X, prev2Y;
-    tailX[0] = x;
-    tailY[0] = y;
-
-    for(int i = 1; i < piece; i++) {
-        prev2X = tailX[i];
-        prev2Y = tailY[i];
-        tailX[i] = prevX;
-        tailY[i] = prevY;
-        prevX = prev2X;
-        prevY = prev2Y;
-    }
-
-    switch(flag) {
-        case 1:
-            x--;
-            break;
-        case 2:
-            x++;
-            break;
-        case 3:
-            y++;
-            break;
-        case 4:
-            y--;
-            break;
-    }
-
-
-    if (x <= 0 || x >= HEIGHT || y <= 0 || y >= WIDTH) {
-        gameEnd = 1;
-    }
-
-    for(int i = 0; i < piece; i++) {
-        if(tailX[i] == x && tailY[i] == y) {
-            gameEnd = 1;
-        }
-    }
-
-    if(x == fruitX && y == fruitY) {
-        score += 10;
-        piece++;
-        
-        fruitX = (rand() % (HEIGHT-2))+1;
-
-        fruitY = (rand() % (WIDTH - 2))+1;
-    }
-}
-
-
-// Function to move cursor to top-left without clearing the screen
-void gotoxy(int x, int y) {
-    COORD coord;
-    coord.X = y;
-    coord.Y = x;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);   // getting the handle of output buffer
-}
-
-// Function to hide cursor
 void hideCursor() {
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
