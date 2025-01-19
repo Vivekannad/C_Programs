@@ -108,10 +108,10 @@ void makeLogic() {
         tailX[i] = tailX[i - 1];
         tailY[i] = tailY[i - 1];
     }
-    if (tailLength > 0) {
+
         tailX[0] = x;
         tailY[0] = y;
-    }
+
 
     // Move snake
     switch (flag) {
@@ -122,7 +122,7 @@ void makeLogic() {
     }
 
     // Check boundary collision
-    if (y <= 0 || y >= HEIGHT || x <= 0 || x >= WIDTH) {
+    if (y < 0 || y >= HEIGHT || x < 0 || x >= WIDTH) {
         gameEnd = 1;
         return;
     }
