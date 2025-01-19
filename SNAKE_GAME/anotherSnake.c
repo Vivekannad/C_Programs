@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <conio.h>
-#include <windows.h> // Include for Sleep function
+#include <windows.h> 
 
+#define Up 72
 #define HEIGHT 20
 #define WIDTH 30
 
@@ -19,22 +20,25 @@ void gotoxy(int x, int y);
 void hideCursor();
 
 int main () { 
-
     hideCursor();
     setUp();
     while(gameEnd != 1) {
-        gotoxy(0,0);
         input();
+        // gotoxy(0,0);
         makeLogic();
         draw();
-        Sleep(200); // Add a small delay to control the speed of the game
+        printf("The score is %d", score);
+        Sleep(100); // Add a small delay to control the speed of the game
     }
+        
+        printf("\nGame Ended  \n");
+        Sleep(1000);
     return 0;
 
 }
 
 void draw () {
-    system("cls");
+    gotoxy(0,0);
 int i, j , k , ch;
 for(i = 0 ; i <= HEIGHT ; i++){
     for(j  = 0; j <= WIDTH ; j++){
@@ -67,26 +71,20 @@ void setUp(){
     x = HEIGHT / 2;
     y = WIDTH / 2;
 
-    label1:
-    fruitX = rand() % HEIGHT;
-    if(fruitX == 0)
-        goto label1;
+    fruitX = (rand() % (HEIGHT - 2))+1;
 
-    label2:
-    fruitY = rand() % WIDTH;
-    if(fruitY == 0)
-        goto label2;
+    fruitY = (rand() % (WIDTH - 2))+1;
 
     gameEnd = 0;
     piece = 0;
     score = 0;
-    flag = 3;
+    flag = 2;
 }
 
 void input () {
-    if(kbhit()) { // Call kbhit as a function
+    if(kbhit()) { // if key is pressed
         switch(getch()) {
-            case 'a' :
+            case 'w' :
                 flag = 1;
                 break;
             case 's' :
@@ -95,7 +93,7 @@ void input () {
             case 'd' :
                 flag = 3;
                 break;
-            case 'f' :
+            case 'a' :
                 flag = 4;
                 break;
          
@@ -121,27 +119,26 @@ void makeLogic () {
 
     switch(flag) {
         case 1:
-            y--;
-            break;
-        case 2:
-            y++;
-            break;
-        case 3:
             x--;
             break;
-        case 4:
+        case 2:
             x++;
+            break;
+        case 3:
+            y++;
+            break;
+        case 4:
+            y--;
             break;
     }
 
-    if (x >= HEIGHT || y >= WIDTH) {
-        printf("Game Ended \n");
+
+    if (x <= 0 || x >= HEIGHT || y <= 0 || y >= WIDTH) {
         gameEnd = 1;
     }
 
     for(int i = 0; i < piece; i++) {
         if(tailX[i] == x && tailY[i] == y) {
-            printf("Game Ended \n");
             gameEnd = 1;
         }
     }
@@ -150,15 +147,9 @@ void makeLogic () {
         score += 10;
         piece++;
         
-        label1:
-        fruitX = rand() % HEIGHT;
-        if(fruitX == 0)
-            goto label1;
+        fruitX = (rand() % (HEIGHT-2))+1;
 
-        label2:
-        fruitY = rand() % WIDTH;
-        if(fruitY == 0)
-            goto label2;
+        fruitY = (rand() % (WIDTH - 2))+1;
     }
 }
 
