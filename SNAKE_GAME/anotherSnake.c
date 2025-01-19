@@ -18,8 +18,10 @@ void input();
 void makeLogic();
 void gotoxy(int x, int y);
 void hideCursor();
+void clearScreen();
 
 int main () { 
+    clearScreen();
     hideCursor();
     setUp();
     while(gameEnd != 1) {
@@ -35,6 +37,15 @@ int main () {
         Sleep(1000);
     return 0;
 
+}
+
+
+void clearScreen(){
+    #ifdef _WIN32
+        system("cls");  // for windows
+    #else 
+        system("clear");    // for linux/mac
+    #endif
 }
 
 void draw () {
