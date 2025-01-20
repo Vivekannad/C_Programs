@@ -1,5 +1,6 @@
-Print these patterns using loops
+Pattern Questions
 
+Print these patterns using loops
 ```
 
 1.  *****
