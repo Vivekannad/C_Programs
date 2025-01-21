@@ -6,13 +6,15 @@ void pattern2();
 void pattern3();
 void pattern4();
 void pattern5();
+void pattern6();
 
 int main () {
     // pattern1();
     // pattern2();
     // pattern3();
     // pattern4();
-    pattern5();
+    // pattern5();
+    pattern6();
     return 0;
 }
 
@@ -81,4 +83,17 @@ void pattern5 () {
         } 
         printf("\n");
    }
+}
+
+void pattern6 () {
+    int n = 5;
+    for(int i = 1; i <= n; i++) {
+        for(int k = n - i; k > 0 ; k--){
+            printf(" ");
+        }
+        for(int j = 1; j <= i; j++){
+            printf("*");
+        }
+        printf("\n");
+    }
 }
