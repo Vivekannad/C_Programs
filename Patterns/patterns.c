@@ -7,6 +7,9 @@ void pattern3();
 void pattern4();
 void pattern5();
 void pattern6();
+void pattern7();
+void pattern8();
+void pattern9();
 
 int main () {
     // pattern1();
@@ -14,7 +17,10 @@ int main () {
     // pattern3();
     // pattern4();
     // pattern5();
-    pattern6();
+    // pattern6();
+    // pattern7();
+    // pattern8();
+    pattern9();
     return 0;
 }
 
@@ -96,4 +102,45 @@ void pattern6 () {
         }
         printf("\n");
     }
+}
+
+void pattern7 () {
+    int n = 5;
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < i; k++){
+            printf(" ");
+        }
+        for(int j = n; j > i; j--){
+            printf("*");
+        }
+        printf("\n");
+    }
+}
+
+void pattern8 () {
+    int n = 5;
+    for(int i = 1; i <= n; i++){
+        for(int k = n; k > i; k--){
+            printf(" ");
+        }
+        for(int j = 0; j < (2 * i) - 1; j++){
+            printf("*");
+        }
+        printf("\n");
+    }
+}
+
+void pattern9 () {
+        int n = 5;
+    for(int i = 1; i <= n; i++){
+        for(int k = 1; k < i; k++){
+            printf(" ");
+        }
+        for(int j = (2 * n) - 1; j >= (2 * i) - 1 ; j--){
+            printf("*");
+        }
+        printf("\n");
+    }
+
 }
