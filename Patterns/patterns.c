@@ -10,6 +10,8 @@ void pattern6();
 void pattern7();
 void pattern8();
 void pattern9();
+void pattern10();
+
 
 int main () {
     // pattern1();
@@ -20,7 +22,8 @@ int main () {
     // pattern6();
     // pattern7();
     // pattern8();
-    pattern9();
+    // pattern9();
+    pattern10();
     return 0;
 }
 
@@ -143,4 +146,17 @@ void pattern9 () {
         printf("\n");
     }
 
+}
+
+void pattern10 () {
+    int n = 5; 
+    for(int i = 0; i < n; i++) {
+        for(int k = n; k > i; k--){
+            printf(" ");
+        }
+        for(int j = 0; j <= i; j++){
+            printf("* ");
+        }
+        printf("\n");
+    }
 }
