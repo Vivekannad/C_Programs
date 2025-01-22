@@ -11,6 +11,8 @@ void pattern7();
 void pattern8();
 void pattern9();
 void pattern10();
+void pattern11();
+void pattern12();
 
 
 int main () {
@@ -23,7 +25,9 @@ int main () {
     // pattern7();
     // pattern8();
     // pattern9();
-    pattern10();
+    // pattern10();
+    // pattern11();
+    pattern12();
     return 0;
 }
 
@@ -155,6 +159,36 @@ void pattern10 () {
             printf(" ");
         }
         for(int j = 0; j <= i; j++){
+            printf("* ");
+        }
+        printf("\n");
+    }
+}
+
+void pattern11 () { 
+    int n = 5;
+    for(int i = 0; i < n; i++) {
+        for(int k = 0; k < i; k++) {
+            printf(" ");
+        }
+        for(int j = n; j > i; j--) {
+            printf("* ");
+        }
+        printf("\n");
+    }
+}
+
+void pattern12 () {
+    //optimized way you can also choose to make two separate loops.
+    
+    int n = 5;
+    for(int i = 0; i < 2 * n; i++) {
+        int spaceInit = i < n ? n - i : (i-n)+1 ;
+        for(int k = spaceInit; k < n; k++) {
+            printf(" ");
+        }
+    
+        for(int j = spaceInit; j > 0; j--) {
             printf("* ");
         }
         printf("\n");
