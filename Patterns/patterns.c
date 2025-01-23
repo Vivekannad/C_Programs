@@ -14,6 +14,7 @@ void pattern10();
 void pattern11();
 void pattern12();
 void pattern13();
+void pattern14();
 
 
 int main () {
@@ -29,7 +30,8 @@ int main () {
     // pattern10();
     // pattern11();
     // pattern12();
-    pattern13();
+    // pattern13();
+    pattern14();
     return 0;
 }
 
@@ -204,7 +206,22 @@ void pattern13 () {
             printf(" ");
         }
         for(int j = 1; j <= (2 * i) - 1; j++) {
-            if(j == 1 || j == 2 * i - 1 || i == n     ){
+            if(j == 1 || j == 2 * i - 1 || i == n){
+                printf("*");
+            }else printf(" ");
+        }
+        printf("\n");
+    }
+}
+
+void pattern14 () {
+    int n = 5;
+    for(int i = n; i > 0; i--) {
+        for(int k = n; k > i; k--) {
+            printf(" ");
+        }
+        for(int j = 1; j <= (2 * i) - 1; j++) {
+            if(i == n || j == 1 || j == (2 * i) -1){
                 printf("*");
             }else printf(" ");
         }
