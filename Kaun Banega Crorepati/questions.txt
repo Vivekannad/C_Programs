@@ -3,6 +3,14 @@ Islamabad
 Karachi
 Lahore
 Peshawar
-a
+A
 10
 1000
+Who is the prime minister of Pakistan?
+Shahbaz Sharif
+Nawaz Sharif
+Imran khan
+Bilawal Bhutto
+A
+10
+2000
