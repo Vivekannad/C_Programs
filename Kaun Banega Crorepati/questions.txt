@@ -1,16 +1,32 @@
-What is the capital of Pakistan?
-Islamabad
-Karachi
-Lahore
-Peshawar
+Who is known as the father of computer?
+Charles Babbage
+Nicholas Henry
+Ada Lovalace
+Alan Turing
 A
 10
 1000
-Who is the prime minister of Pakistan?
-Shahbaz Sharif
-Nawaz Sharif
-Imran khan
-Bilawal Bhutto
+What is the full form of E-mail?
+Entrance Mail
+Electronic Mail
+Entrance Mail
+E-commerce Mail
+B
+10
+1000
+How many types of softwares are there?
+2
+4
+5
+6
 A
 10
-2000
+1000
+Memory inside the CPU is known as?
+ROM 
+RAM 
+cache 
+none of these
+C
+10
+1000

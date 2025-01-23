@@ -3,9 +3,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <signal.h>
+#include <conio.h>
+#include <windows.h>
 
 #define MAX_QUES_LEN 200
 #define MAX_OPTION_LEN 100
+
+volatile int timeOut = 0;
+
 #define PINK_COLOR "\033[1;35m"
 #define GREY_COLOR "\033[1;30m"
 #define BLUE_COLOR "\033[1;34m"
@@ -30,7 +36,7 @@ void printFormattedQuestion(Questions);
 void fixStringInput(char *);
 void clearBuffer();
 void playGame(Questions *, int);
-int useLifeline(Questions* , int *);
+int useLifeline(Questions *, int *);
 
 int main()
 {
@@ -46,8 +52,10 @@ int main()
     return 0;
 }
 
-void clearBuffer () {
-    while(getchar() != '\n');
+void clearBuffer()
+{
+    while (getchar() != '\n')
+        ;
 }
 
 int loadQuestions(char *fileName, Questions **questions)
@@ -104,12 +112,15 @@ void printFormattedQuestion(Questions question)
     printf("\n%s", AQUA_COLOR);
     for (int i = 0; i < 4; i++)
     {
-        printf("\n%c. %s", ('A' + i), question.options[i]);
+        if (question.options[i][0] != '\0')
+        {
+            printf("\n%c. %s", ('A' + i), question.options[i]);
+        }
     }
     printf("%s", COLOR_END);
     printf("\n\n%sHurry up you have only %d seconds to answer %s", YELLOW_COLOR, question.time, COLOR_END);
 
-    printf("\n%s Enter your answer (A , B , C or D) or L for Lifeline %s", GREEN_COLOR, COLOR_END);
+    printf("\n%sEnter your answer (A , B , C or D) or L for Lifeline %s", GREEN_COLOR, COLOR_END);
 }
 
 void fixStringInput(char *string)
@@ -123,14 +134,36 @@ void playGame(Questions *questions, int noOfQuestions)
     int lifeline[] = {1, 1};
     for (int i = 0; i < noOfQuestions; i++)
     {
+    time_t start_time = time(NULL);
         printFormattedQuestion(questions[i]);
-        char ch = getchar();
-        clearBuffer();
-        ch = toupper(ch);
+        char ch;
+        while (1) // Keep checking for input and timeout
+        {
+            if (time(NULL) - start_time >= questions[i].time) // Check timeout
+            {
+                printf("\n%sTime's up! You didn't answer in time.%s\n", RED_COLOR, COLOR_END);
+                timeOut = 1;
+                break;
+            }
+
+            if (kbhit()) // Check if a key was pressed
+            {
+                
+                ch = getch();
+                putchar(ch);
+                // clearBuffer();
+                ch = toupper(ch);
+                break;
+            }
+        }
+        if(timeOut) {
+            break;
+        }
         if (ch == 'L')
         {
             int returned = useLifeline(&questions[i], lifeline);
-            if(returned != 2) {
+            if (returned != 2)
+            {
                 i--;
             }
             continue;
@@ -138,8 +171,8 @@ void playGame(Questions *questions, int noOfQuestions)
 
         if (ch == questions[i].correctOption)
         {
-            printf("%sCorrect Answer%s", GREEN_COLOR, COLOR_END);
-            moneyWon = questions[i].prizeMoney;
+            printf("\n%sCorrect Answer%s", GREEN_COLOR, COLOR_END);
+            moneyWon += questions[i].prizeMoney;
             printf("\n%sYou have won %d ruppees. %s", BLUE_COLOR, moneyWon, COLOR_END);
         }
         else
@@ -153,38 +186,42 @@ void playGame(Questions *questions, int noOfQuestions)
 
 int useLifeline(Questions *question, int *lifeline)
 {
-    printf("\nAvailable Lifelines ");
+    printf("\n%sAvailable Lifelines ", PINK_COLOR);
     if (lifeline[0])
         printf("\n1. Fifty/Fifty (50/50) ");
     if (lifeline[1])
         printf("\n2. Skip the question ");
-    printf("Choose a lifeline or 0 to return ");
+    printf("\nChoose a lifeline or 0 to return:-  %s", COLOR_END);
     char ch = getchar();
     clearBuffer();
-    switch(ch) {
-        case '1':
-        if(lifeline[0]){
-        lifeline[0] = 0;
-        int removed = 0;
-        while(removed < 2) {
-        int num  = rand() % 4;
-        if( (num + 'A' ) != question->correctOption && question->options[num][0] != '\0'){
-            question->options[num][0] = '\0';
-            removed++;
-        }
-        }
-        return 1;
-        }
-        break;
-        case '2':
-        if(lifeline[1]){
-        lifeline[1] = 0;
-        return 2;
+    switch (ch)
+    {
+    case '1':
+        if (lifeline[0])
+        {
+            lifeline[0] = 0;
+            int removed = 0;
+            while (removed < 2)
+            {
+                int num = rand() % 4;
+                if ((num + 'A') != question->correctOption && question->options[num][0] != '\0')
+                {
+                    question->options[num][0] = '\0';
+                    removed++;
+                }
+            }
+            return 1;
         }
         break;
-        default:
-        printf("\nReturning to the question ");
+    case '2':
+        if (lifeline[1])
+        {
+            lifeline[1] = 0;
+            return 2;
+        }
+        break;
+    default:
+        printf("\n%sReturning to the question %s", PINK_COLOR, COLOR_END);
     }
-        return 0;
-
+    return 0;
 }
