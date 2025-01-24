@@ -15,6 +15,7 @@ void pattern11();
 void pattern12();
 void pattern13();
 void pattern14();
+void pattern15();
 
 
 int main () {
@@ -31,7 +32,8 @@ int main () {
     // pattern11();
     // pattern12();
     // pattern13();
-    pattern14();
+    // pattern14();
+    pattern15();
     return 0;
 }
 
@@ -223,6 +225,25 @@ void pattern14 () {
         for(int j = 1; j <= (2 * i) - 1; j++) {
             if(i == n || j == 1 || j == (2 * i) -1){
                 printf("*");
+            }else printf(" ");
+        }
+        printf("\n");
+    }
+}
+
+void pattern15 () {
+    int n = 5;
+    for(int i = 1; i <= (2*n) - 1; i++) {
+        int spaces = i <= n ? n : i;
+        int spaceCondition = i <= n ? i : n;
+        int col = i <= n ? 1 : n + (i - n);
+        int stars = i <= n ? (2 * i) - 1 : (2 * (2 * n - i)) - 1;
+        for(int k = spaces; k > spaceCondition; k--){
+            printf(" ");
+        }
+        for(int j = 0; j <= stars; j++) {
+            if(j == 0 || j == stars - 1 ){
+            printf("*");
             }else printf(" ");
         }
         printf("\n");
