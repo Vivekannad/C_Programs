@@ -16,6 +16,7 @@ void pattern12();
 void pattern13();
 void pattern14();
 void pattern15();
+void pattern16();
 
 
 int main () {
@@ -33,7 +34,8 @@ int main () {
     // pattern12();
     // pattern13();
     // pattern14();
-    pattern15();
+    // pattern15();
+    pattern16();
     return 0;
 }
 
@@ -245,6 +247,24 @@ void pattern15 () {
             if(j == 0 || j == stars - 1 ){
             printf("*");
             }else printf(" ");
+        }
+        printf("\n");
+    }
+}
+
+void pattern16 () {
+    int n = 5, prev = 1;
+    for(int i = 0; i < n; i++) {
+        for(int k = n; k > i  ; k--) {
+            printf(" ");
+        }
+        for(int j = 0; j <= i; j++) {
+            if(j == 0 || i == 0) {
+                prev =  1;
+            }else {
+                prev=prev*(i-j+1)/j;
+            }
+            printf("%d ", prev);
         }
         printf("\n");
     }
