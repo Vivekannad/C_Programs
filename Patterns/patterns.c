@@ -17,6 +17,7 @@ void pattern13();
 void pattern14();
 void pattern15();
 void pattern16();
+void pattern17();
 
 
 int main () {
@@ -35,7 +36,8 @@ int main () {
     // pattern13();
     // pattern14();
     // pattern15();
-    pattern16();
+    // pattern16();
+    pattern17();
     return 0;
 }
 
@@ -265,6 +267,23 @@ void pattern16 () {
                 prev=prev*(i-j+1)/j;
             }
             printf("%d ", prev);
+        }
+        printf("\n");
+    }
+}
+
+void pattern17 () {
+    int n = 4, rowN = (2 * n) - 1;
+    for(int i = 1 ; i <= rowN; i++) {
+        int rows = i <= n ? i : 2 * n - i;
+        for(int k = 1; k <= n - rows; k++) {
+            printf(" ");
+        }
+        for(int j = 1; j <= 2 * rows - 1; j++) {
+            if(j <= rows) {
+                printf("%d", (rows - j) + 1);
+            }else
+            printf("%d", (j - rows) + 1);
         }
         printf("\n");
     }
