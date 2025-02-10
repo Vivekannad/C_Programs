@@ -18,6 +18,7 @@ void pattern14();
 void pattern15();
 void pattern16();
 void pattern17();
+void pattern18();
 
 
 int main () {
@@ -37,7 +38,8 @@ int main () {
     // pattern14();
     // pattern15();
     // pattern16();
-    pattern17();
+    // pattern17();
+    pattern18();
     return 0;
 }
 
@@ -273,9 +275,11 @@ void pattern16 () {
 }
 
 void pattern17 () {
-    int n = 4, rowN = (2 * n) - 1;
+
+    //most optimized may not be most readable.
+    int n = 5, rowN = (2 * n) - 1;
     for(int i = 1 ; i <= rowN; i++) {
-        int rows = i <= n ? i : 2 * n - i;
+        int rows = i <= n ? i : 2 * n - i; 
         for(int k = 1; k <= n - rows; k++) {
             printf(" ");
         }
@@ -284,6 +288,29 @@ void pattern17 () {
                 printf("%d", (rows - j) + 1);
             }else
             printf("%d", (j - rows) + 1);
+        }
+        printf("\n");
+    }
+}
+
+void pattern18 () {
+    int n = 5;
+    for(int i = 0 ; i < 2 * n; i++){
+        for(int j = 0 ; j < 2 * n; j++){
+            if(i == 0 || i == (2 * n) - 1){
+                printf("*");
+            }
+            else if(i < n){
+                if(j >= n  - i && j < n + i){
+                   printf(" ");
+               } else {
+                printf("*");
+               }
+            }else if(i >= n){
+                if(j > (i - n) && j < (3 * n)  - (i + 1) ){
+                    printf(" ");
+                }else printf("*");
+            }
         }
         printf("\n");
     }
