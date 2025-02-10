@@ -19,6 +19,7 @@ void pattern15();
 void pattern16();
 void pattern17();
 void pattern18();
+void pattern19();
 
 
 int main () {
@@ -39,7 +40,8 @@ int main () {
     // pattern15();
     // pattern16();
     // pattern17();
-    pattern18();
+    // pattern18();
+    pattern19();
     return 0;
 }
 
@@ -307,6 +309,24 @@ void pattern18 () {
                 if(j > (i - n) && j < (3 * n)  - (i + 1) ){
                     printf(" ");
                 }else printf("*");
+            }
+        }
+        printf("\n");
+    }
+}
+
+void pattern19 () {
+    int n = 5;
+    for(int i = 0 ; i < (2 * n) - 1; i++  ){
+        for(int j = 0 ; j  < 2 * n; j++){
+            if(i < n){
+                if(j > i && j+1 < (2 * n) - i){
+                    printf("%d", j);
+                }else printf("*");
+            }else {
+                if(j >= i && j < (2 * (i+1)) - n){
+                    printf(" ");
+                } else printf("*");
             }
         }
         printf("\n");
