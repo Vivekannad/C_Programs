@@ -297,10 +297,7 @@ void pattern18 () {
     int n = 5;
     for(int i = 0 ; i < 2 * n; i++){
         for(int j = 0 ; j < 2 * n; j++){
-            if(i == 0 || i == (2 * n) - 1){
-                printf("*");
-            }
-            else if(i < n){
+             if(i < n){
                 if(j >= n  - i && j < n + i){
                    printf(" ");
                } else {
